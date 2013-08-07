@@ -18,4 +18,6 @@ class supervisor::params {
       fail("Unsupported platform: ${::osfamily}")
     }
   }
+  $init_script = '/etc/init.d/supervisor.custom'
+  $custom_init_script = 'puppet:///modules/supervisor/supervisor.init'
 }

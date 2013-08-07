@@ -194,10 +194,22 @@ class supervisor(
     require => Package[$supervisor::params::package],
   }
 
+  file { $supervisor::params::init_script: 
+      ensure => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      source  => "$supervisor::params::custom_init_script";
+  }
+
   service { $supervisor::params::system_service:
     ensure     => $service_ensure_real,
     enable     => $service_enable,
-    hasrestart => true,
-    require    => File[$supervisor::params::conf_file],
+    provider   => base,
+    restart  => "$supervisor::params::init_script restart",
+    start    => "$supervisor::params::init_script start",
+    status   => "$supervisor::params::init_script status",
+    stop     => "$supervisor::params::init_script stop",
+    require    => File[$supervisor::params::init_script],
   }
 }
